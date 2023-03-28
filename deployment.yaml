@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dreamspace
+
+--- 
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dream-deploy
+  namespace: dreamspace
+spec:
+  selector:
+    matchLabels:
+      app: dream-app
+  replicas: 3 
+  template:
+    metadata:
+      labels:
+        app: dream-app 
+    spec:
+      containers:
+      - name: dream-app
+        image: gcr.io/dream-project-381712/dream:1.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9001
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dream-service
+  namespace: dreamspace
+spec:
+  type: NodePort
+  selector:
+    app: dream-app
+  ports:
+  - protocol: TCP
+    port: 31000
+    targetPort: 9001
+---
