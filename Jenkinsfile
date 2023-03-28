@@ -1,31 +1,28 @@
-pipeline {
-    agent any
-    }
-    environment {
-        GCR_CRED = credentials('dream-project-381712')
-        GCR_REPO = "gcr.io/dream-project-381712"
-        IMAGE_TAG = "${env.BUILD_ID}"
-    }
-    stages {
-        stage('Clone repository') {
-                steps{
-                        checkout scm
-                }
-    }
-        stage('Build') {
-            steps {
-                sh "echo ${GCR_CRED} > login.json"
-                sh "cat login.json | docker login cat jenkins-sa.json | docker login -u _json_key --password-stdin 'https://gcr.io'"
-                sh "docker build  -t ${GCR_REPO}:{$IMAGE_TAG} -t ${GCR_REPO} ."
-                sh "docker image ls"
-                sh "docker push --all-tags ${GCR_REPO}"
+node {
+    def app
 
-            }
-        }
-        stage('Trigger ManifestUpdate') {
-            steps{
-                echo "triggering updatemanifestjob"
-                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-            }
-        }
+    stage('Clone repository') {
+      
+
+        checkout scm
     }
+
+    stage('Update GIT') {
+            script {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        //def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+                        sh "git config user.email gurdalc19@itu.edu.tr"
+                        sh "git config user.name gurdalc19"
+                        //sh "git switch master"
+                        sh "cat deployment.yaml"
+                        sh "sed -i 's+raj80dockerid/test.*+raj80dockerid/test:${DOCKERTAG}+g' deployment.yaml"
+                        sh "cat deployment.yaml"
+                        sh "git add ."
+                        sh "git commit -m 'Done by Jenkins Job changemanifest: ${env.BUILD_NUMBER}'"
+                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/dreamManifast.git HEAD:main"
+      }
+    }
+  }
+}
+}
