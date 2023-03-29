@@ -43,4 +43,6 @@ spec:
   - protocol: TCP
     port: 31000
     targetPort: 9001
+  externalIPs:
+    - 34.168.168.27
 ---
