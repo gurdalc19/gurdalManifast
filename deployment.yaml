@@ -15,7 +15,7 @@ spec:
   selector:
     matchLabels:
       app: dream-app
-  replicas: 3 
+  replicas: 4 
   template:
     metadata:
       labels:
