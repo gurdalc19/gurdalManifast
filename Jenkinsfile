@@ -16,7 +16,7 @@ node {
                         sh "git config user.name gurdalc19"
                         //sh "git switch master"
                         sh "cat deployment.yaml"
-                        sh "sed -i 'gcr.io/dream-project-381712/dream.*+gcr.io/dream-project-381712/dream:${DOCKERTAG}+g' deployment.yaml"
+                        sh "sed -i 's+gcr.io/dream-project-381712/dream.*+gcr.io/dream-project-381712/dream:${DOCKERTAG}+g' deployment.yaml"
                         sh "cat deployment.yaml"
                         sh "git add ."
                         sh "git commit -m 'Done by Jenkins Job changemanifest: ${env.BUILD_NUMBER}'"
