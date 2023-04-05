@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: dream-app
-        image: gcr.io/dream-project-381712/dream:44
+        image: gcr.io/dream-project-381712/dream:66
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9001
