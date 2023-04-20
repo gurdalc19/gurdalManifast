@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: dream-app
-        image: gcr.io/dream-project-381712/dream:66
+        image: gcr.io/<project_id>/dream:66
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9001
@@ -44,5 +44,5 @@ spec:
     port: 31000
     targetPort: 9001
   externalIPs:
-    - 34.168.168.27
+    - <PUBLIC_IP>
 ---
